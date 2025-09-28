@@ -1,1 +1,80 @@
+package com.mycompany.linklist_prac;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.ListIterator;
+public class Expenses {
+    private String name;
+    private String mobile;
+    private double balance;
+    private LinkedList<String> history = new LinkedList<>();
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+
+    
+    Expenses(String name, String mobile){
+        this.name = name;
+        this.mobile = mobile;
+        this.balance = 0;
+    }
+    
+    private void addHistory(String action, double amount) {
+        String timestamp = dtf.format(LocalDateTime.now());
+        history.add(timestamp + " | " + action + " | " + amount);
+    }
+
+    public void cashIn(double amount) {
+        balance += amount;
+        addHistory("Cash-In", amount);
+        System.out.println("Cash-In Successful. Current Balance: " + balance);
+    }
+
+    public void payBills(String merchant, double amount) {
+        double fee = amount * 0.02;
+        double total = amount + fee;
+
+         if (balance >= total) {
+             balance -= total;
+             addHistory("Pay Bills to " + merchant, amount);
+             System.out.println("Paid " + amount + " to " + merchant + " (Fee: " + fee + ")");
+             System.out.println("Remaining Balance: " + balance);
+         }else {
+            System.out.println("Insufficient balance! You need " + total + " (including " + fee + " fee), but you only have " + balance);
+    }
+}
+
+    public void load(String number, double amount) {
+        if (number.length() == 11) {
+            double fee = amount * 0.02;
+            double total = amount + fee;
+
+        if (balance >= total) {
+            balance -= total;
+            addHistory("Load to " + number, amount);
+            System.out.println("Loaded " + amount + " to " + number + " (Fee: " + fee + ")");
+            System.out.println("Remaining Balance: " + balance);
+        } else {
+            System.out.println("Insufficient balance! You need " + total + " (including " + fee + " fee), but you only have " + balance);
+        }
+        }else{
+        System.out.println("Invalid mobile number!");
+    }
+}
+
+    public void balanceInquiry() {
+        System.out.println("Current Balance: " + balance);
+    }
+
+  
+    public void showHistory() {
+        if (history.isEmpty()) {
+            System.out.println("No transaction history.");
+        } else {
+            System.out.println("--- Transaction History (Latest First) ---");
+            ListIterator<String> itr = history.listIterator(history.size()); 
+            while (itr.hasPrevious()) {
+                System.out.println(itr.previous());
+            }
+        }
+    }
+}
 
